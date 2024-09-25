@@ -71,8 +71,8 @@ Multiple algorithms are proposed for each stage, with careful consideration of d
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | Fast (F) | - | QR | PM | PP | - |
 | Balance (B) | - | NN | CM | CP | - |
-| Quality (Q) | Downs. $\left(l_1, 1\right)$ | AQR | CM | NP | - |
-| Quality+ $(\mathrm{Q}+$ ) | Downs. $\left(l_1, l_2\right)$ | AQR | CM | NP | Ups. + PSR |
+| Quality (Q) | Downs. $(l_1, 1)$ | AQR | CM | NP | - |
+| Quality+ (Q+) | Downs. $(l_1, l_2)$ | AQR | CM | NP | Ups. + PSR |
 
 
 This repository contains the official implementations of the proposed algorithms for each stage and representative pipelines. The code is written in C++, and the pipeline can be easily customized to meet the requirements of different applications.
