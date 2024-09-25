@@ -34,7 +34,7 @@
   </a>
 </p>
 
-This work proposes the very first error concealment pipeline framework, which is designed to be flexible and extensible, allowing users to customize the pipeline in different usage scenarios.  
+This work proposes the very first error concealment pipeline framework for dynamic 3D point cloud streaming, which is designed to be flexible and extensible, allowing users to customize the pipeline in different usage scenarios.  
 
 ## Outline
 - [About](#about)
@@ -44,7 +44,7 @@ This work proposes the very first error concealment pipeline framework, which is
   - [Requirements](#requirements)
   - [Build](#build)
   - [Usage](#usage)
-  - [Pipeline Sample](#pipeline-sample)
+  - [Pipeline Example](#pipeline-example)
   - [Create Your Own Algorithm](#create-your-own-algorithm)
   - [Other Tips](#other-tips)
 - [License](#license)
@@ -75,7 +75,7 @@ Multiple algorithms are proposed for each stage, with careful consideration of d
 | Quality+ $(\mathrm{Q}+$ ) | Downs. $\left(l_1, l_2\right)$ | AQR | CM | NP | Ups. + PSR |
 
 
-This repository contains the official implementations of the proposed algorithms for each stage, and four representative pipelines. The code is written in C++, and the pipeline can be easily customized to meet the requirements of different applications.
+This repository contains the official implementations of the proposed algorithms for each stage and representative pipelines. The code is written in C++, and the pipeline can be easily customized to meet the requirements of different applications.
 
 ## Implementation
 
@@ -106,14 +106,10 @@ make
 ```
 
 ### Usage
-Go back to folder `PCEC`
-```bash
-cd ..
-```
 
 Run following command:
 ```bash
-python client.py -prev PREVIOUS_FRAME_PATH -next NEXT_FRAME_PATH -out OUTPUT_PATH -pos RELATIVE_POSITION
+python client.py -prev <PREVIOUS_FRAME_PATH> -next <NEXT_FRAME_PATH> -out <OUTPUT_PATH> -pos <RELATIVE_POSITION>
 ``` 
 
 Example command:
@@ -136,7 +132,7 @@ python client.py -prev example/longdress_1051.ply -next example/longdress_1055.p
   </a>
 </p> -->
 
-### Pipeline Sample
+### Pipeline Example
 
 In `config.hpp`, we've provided F, B, Q pipeline combinations for your convenience. The current pipeline in use is labeled as "Q". 
 
@@ -163,7 +159,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 If you find our work useful in your research, please consider citing:
 
-```
+```bibtex
 @article{huang2024composing,
   title={Composing Error Concealment Pipelines for Dynamic 3D Point Cloud Streaming},
   author={Huang, I-Chun and Shi, Yuang and Sun, Yuan-Chun and Ooi, Wei Tsang and Huang, Chun-Ying and Hsu, Cheng-Hsin},
@@ -174,7 +170,7 @@ If you find our work useful in your research, please consider citing:
 
 This work stands on the shoulders of our previous works. If you find our previous works useful in your research, please consider citing them:
 
-```
+```bibtex
 @inproceedings{sun2023dynamic,
   title={A Dynamic 3D Point Cloud Dataset for Immersive Applications},
   author={Sun, Yuan-Chun and Huang, I-Chun and Shi, Yuang and Ooi, Wei Tsang and Huang, Chun-Ying and Hsu, Cheng-Hsin},
