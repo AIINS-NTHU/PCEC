@@ -20,20 +20,62 @@
 
 
 <div align="center">
-    <a href="http://arxiv.org/abs/2408.14823" target='_blank'>
+    <a href="" target='_blank'>
         <img src="https://img.shields.io/badge/Paper-%F0%9F%93%83-blue">
     </a>
     <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAIINS-NTHU%2FPCEC&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitors&edge_flat=false"/></a>
-</div> <br> <br>
+</div>
 
-# About
+## About
+
+<p align="center">
+  <a href="">
+    <img src="/fig/teaser.png" alt="teaser" width="80%">
+  </a>
+</p>
+
+This work proposes the very first error concealment pipeline framework, which is designed to be flexible and extensible, allowing users to customize the pipeline in different usage scenarios.  
+
+## Outline
+- [About](#about)
+- [Outline](#outline)
+- [Overview](#overview)
+- [Implementation](#implementation)
+  - [Requirements](#requirements)
+  - [Build](#build)
+  - [Usage](#usage)
+  - [Pipeline Sample](#pipeline-sample)
+  - [Create Your Own Algorithm](#create-your-own-algorithm)
+  - [Other Tips](#other-tips)
+- [License](#license)
+- [Citation](#citation)
 
 
-This repository contains the official implementation of the paper "Composing Error Concealment Pipelines for Dynamic 3D Point Cloud Streaming". 
+## Overview
 
-This work proposes the very first error concealment pipeline framework, which comprises five stages: pre-processing, matching, motion estimation, prediction, and post-processing. The framework is designed to be flexible and extensible, allowing users to customize the pipeline in different usage scenarios.
+The proposed error concealment framework comprises five stages: 
+1. **Pre-Processing**. Downsample point clouds to reduce the computational overhead of the following stages.
+2. **Matching**. Compute the matching table from two anchor (reference) frames. 
+3. **Motion Estimation**. Calculate the resulting motion vectors from two anchor (reference) frames.
+4. **Prediction**. Generate error-concealed frame in good visual quality using the anchor frames and motion vectors.
+5. **Post-Processing**. Improve spatial smoothness by repairing the cracks and artifacts produced by the previous stages.
+
+Multiple algorithms are proposed for each stage, with careful consideration of different usage scenarios. Moreover, based on the quantitative evaluation and analysis, we concatenate the proposed algorithms in different stages to form four representative error concealment pipelines for diverse usage scenarios:
+1. **Fast (F)** for minimum time complexity.
+2. **Balance (B)** for a good tradeoff between quality and time complexity.
+3. **Quality (Q)** for the highest quality.
+4. **Quality+ (Q+)** is built upon Q, but uses the more expensive Poisson Surface Reconstruction (PSR) for surface refinement.
 
 
+| Pipeline | Stg. 1. Pre-Proc. | Stg. 2. Matching | Stg. 3. M. Est. | Stg. 4. Pred. | Stg. 5. Post-Proc. |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| Fast (F) | - | QR | PM | PP | - |
+| Balance (B) | - | NN | CM | CP | - |
+| Quality (Q) | Downs. $\left(l_1, 1\right)$ | AQR | CM | NP | - |
+| Quality+ $(\mathrm{Q}+$ ) | Downs. $\left(l_1, l_2\right)$ | AQR | CM | NP | Ups. + PSR |
+
+
+This repository contains the official implementations of the proposed algorithms for each stage, and four representative pipelines. The code is written in C++, and the pipeline can be easily customized to meet the requirements of different applications.
 
 ## Implementation
 
@@ -76,46 +118,69 @@ python client.py -prev PREVIOUS_FRAME_PATH -next NEXT_FRAME_PATH -out OUTPUT_PAT
 
 Example command:
 ```bash
-python client.py -prev files/longdress_1051.ply -next files/longdress_1055.ply -out output.ply -pos 0.5
+python client.py -prev example/longdress_1051.ply -next example/longdress_1055.ply -out example/output.ply -pos 0.5
 ```
-`-prev files/longdress_1051.ply` previous point cloud file we provide
+`-prev example/longdress_1051.ply` previous point cloud file we provide
 
-`-next files/longdress_1055.ply` next point cloud file we provide
+`-next example/longdress_1055.ply` next point cloud file we provide
 
-`-out files/output.ply` output point cloud file path
+`-out example/output.ply` output point cloud file path
 
 `-pos 0.5` means the output file is right at the middle of previous and next frames
 
-The output.ply will look like:
-![output.ply](files/output_illustration.png)
+<!-- The output.ply will look like:
 
-### Different pipeline sample
-In `config.hpp`, we've provided P, B, Q pipeline combinations for your convenience. The current pipeline in use is labeled as "Q." To switch to a different pipeline combination, simply comment or uncomment the relevant lines based on your requirements. Remember that every time you make changes to either the .hpp or .cpp files, you'll need to rebuild the project.
+<p align="center">
+  <a href="">
+    <img src="fig/output_illustration.png" alt="teaser" width="20%">
+  </a>
+</p> -->
 
-### Create your own Pipeline
+### Pipeline Sample
 
-To create custom methods, please consult the `base.hpp` file. Within `base.hpp`, we've established a virtual class called Stage, which all methods must inherit from. Additionally, in the `Pipeline_Object` definition, we've clearly specified the output variables for each stage. It's essential to ensure that any custom stage methods you create align with the input and output requirements of each respective stage. After implement your own stage method, modify the pipeline reference in `config.hpp`, and rebuild the project.
+In `config.hpp`, we've provided F, B, Q pipeline combinations for your convenience. The current pipeline in use is labeled as "Q". 
+
+To switch to a different pipeline combination, simply comment or uncomment the relevant lines based on your requirements. Remember that every time you make changes to either the .hpp or .cpp files, you'll need to rebuild the project.
+
+### Create Your Own Algorithm
+
+To create custom methods, please consult the `base.hpp` file. Within `base.hpp`, we've established a virtual class called Stage, which all methods must inherit from. Additionally, in the `Pipeline_Object` definition, we've clearly specified the output variables for each stage. It's essential to ensure that any custom stage algorithms you create align with the input and output requirements of each respective stage. 
+
+After implement your own stage algorithms, modify the pipeline reference in `config.hpp`, and rebuild the project.
 
 
-### Other tips
+### Other Tips
 
-Given that various point cloud datasets may employ different coordinate systems and units of measurement, we recommend scaling your dataset to align with the [8iVFB dataset]((http://plenodb.jpeg.org/pc/8ilabs/)) for consistency.
+Given that various point cloud datasets may employ different coordinate systems and units of measurement, we recommend scaling your dataset to align with the [8iVFB dataset](http://plenodb.jpeg.org/pc/8ilabs/) for consistency.
 
 
-# License
+## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 
-# Citation
+## Citation
 
-If you find our work useful in your research, please consider citing the following papers:
+If you find our work useful in your research, please consider citing:
 
 ```
 @article{huang2024composing,
   title={Composing Error Concealment Pipelines for Dynamic 3D Point Cloud Streaming},
   author={Huang, I-Chun and Shi, Yuang and Sun, Yuan-Chun and Ooi, Wei Tsang and Huang, Chun-Ying and Hsu, Cheng-Hsin},
+  journal={Placeholder, Under Review},
   year={2024}
+}
+```
+
+This work stands on the shoulders of our previous works. If you find our previous works useful in your research, please consider citing them:
+
+```
+@inproceedings{sun2023dynamic,
+  title={A Dynamic 3D Point Cloud Dataset for Immersive Applications},
+  author={Sun, Yuan-Chun and Huang, I-Chun and Shi, Yuang and Ooi, Wei Tsang and Huang, Chun-Ying and Hsu, Cheng-Hsin},
+  booktitle={Proceedings of the 14th Conference on ACM Multimedia Systems},
+  pages={376--383},
+  year={2023}
 }
 
 @inproceedings{hung2022error,
