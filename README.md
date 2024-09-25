@@ -74,39 +74,6 @@ Multiple algorithms are proposed for each stage, with careful consideration of d
 | Quality (Q) | Downs. $(l_1, 1)$ | AQR | CM | NP | - |
 | Quality+ (Q+) | Downs. $(l_1, l_2)$ | AQR | CM | NP | Ups. + PSR | -->
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pipeline Comparison Table</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 800px;
-            margin: 20px auto;
-            font-family: Arial, sans-serif;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .pipeline {
-            font-weight: bold;
-        }
-    </style>
-</head>
 <body>
     <table>
         <thead>
@@ -155,7 +122,6 @@ Multiple algorithms are proposed for each stage, with careful consideration of d
         </tbody>
     </table>
 </body>
-</html>
 
 
 This repository contains the official implementations of the proposed algorithms for each stage and representative pipelines. The code is written in C++, and the pipeline can be easily customized to meet the requirements of different applications.
